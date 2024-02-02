@@ -69,7 +69,7 @@ fun RegistrationScreen(
         TextInput(inputText = "Фамилия")
         Spacer(modifier = Modifier.height(16.dp))
         TextInput(inputText = "Номер телефона")
-        EnterButton(navController = navController, navigationRoute = NavigationRoute.CatalogScreen.route)
+        EnterButton(navController = navController, navigationRoute = NavigationRoute.BottomNavigation.route)
         Box(
             modifier = Modifier
                 .fillMaxHeight()
