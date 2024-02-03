@@ -30,6 +30,7 @@ import com.example.effectivemobiletestwork.R
 import com.example.effectivemobiletestwork.common.EnterButton
 import com.example.effectivemobiletestwork.common.TextInput
 import com.example.effectivemobiletestwork.navigation.NavigationRoute
+import com.example.effectivemobiletestwork.ui.theme.Pink
 
 @Composable
 fun RegistrationScreen(
@@ -57,7 +58,7 @@ fun RegistrationScreen(
                     .fillMaxWidth(),
                 text = "Войти",
                 style = TextStyle(
-                    fontSize = 18.sp,
+                    fontSize = 16.sp,
                     color = Color.Black,
                     fontFamily = sfprodisplay_regular
                 ),
@@ -69,7 +70,7 @@ fun RegistrationScreen(
         TextInput(inputText = "Фамилия")
         Spacer(modifier = Modifier.height(16.dp))
         TextInput(inputText = "Номер телефона")
-        EnterButton(navController = navController, navigationRoute = NavigationRoute.BottomNavigation.route)
+        EnterButton(navController = navController, navigationRoute = NavigationRoute.BottomNavigation.route, "Войти", colorButton = Pink)
         Box(
             modifier = Modifier
                 .fillMaxHeight()

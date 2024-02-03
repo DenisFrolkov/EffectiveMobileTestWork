@@ -22,12 +22,14 @@ import com.example.effectivemobiletestwork.ui.theme.Pink
 @Composable
 fun EnterButton(
     navController: NavController,
-    navigationRoute: String
+    navigationRoute: String,
+    textButton: String,
+    colorButton: Color
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = Pink, shape = RoundedCornerShape(8.dp))
+            .background(color = colorButton, shape = RoundedCornerShape(8.dp))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
@@ -39,10 +41,10 @@ fun EnterButton(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 18.dp, bottom = 15.dp),
-            text = "Войти",
+            text = textButton,
             style = TextStyle(
                 fontSize = 14.sp,
-                color = Color.White
+                color = if (colorButton == Pink) Color.White else Color.Black
             ),
             textAlign = TextAlign.Center
         )

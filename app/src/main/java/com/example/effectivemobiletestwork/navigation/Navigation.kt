@@ -7,6 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.effectivemobiletestwork.bottom_navigation.BottomNavigation
 import com.example.effectivemobiletestwork.screens.CatalogScreen
+import com.example.effectivemobiletestwork.screens.FavoriteScreen
+import com.example.effectivemobiletestwork.screens.ProductPageScreen
 import com.example.effectivemobiletestwork.screens.RegistrationScreen
 
 @Composable
@@ -21,7 +23,10 @@ fun Navigation() {
             CatalogScreen()
         }
         composable(NavigationRoute.BottomNavigation.route){
-            BottomNavigation()
+            BottomNavigation(navController = navController)
+        }
+        composable(NavigationRoute.ProductPageScreen.route){
+            ProductPageScreen()
         }
     }
 }
