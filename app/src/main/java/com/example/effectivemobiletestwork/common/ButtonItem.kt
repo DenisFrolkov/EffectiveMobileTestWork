@@ -24,7 +24,8 @@ fun EnterButton(
     navController: NavController,
     navigationRoute: String,
     textButton: String,
-    colorButton: Color
+    colorButton: Color,
+    colorText: Color
 ) {
     Box(
         modifier = Modifier
@@ -34,7 +35,9 @@ fun EnterButton(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                navController.navigate(navigationRoute)
+                if (navigationRoute != ""){
+                    navController.navigate(navigationRoute)
+                }
             }
     ) {
         Text(
@@ -44,7 +47,7 @@ fun EnterButton(
             text = textButton,
             style = TextStyle(
                 fontSize = 14.sp,
-                color = if (colorButton == Pink) Color.White else Color.Black
+                color = colorText
             ),
             textAlign = TextAlign.Center
         )

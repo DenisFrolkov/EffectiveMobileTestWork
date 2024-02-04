@@ -4,6 +4,9 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import com.google.accompanist.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -27,6 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.PagerState
+import com.google.accompanist.pager.rememberPagerState
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -39,34 +47,45 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.effectivemobiletestwork.R
+import com.example.effectivemobiletestwork.navigation.NavigationRoute
 import com.example.effectivemobiletestwork.ui.theme.Dark
 import com.example.effectivemobiletestwork.ui.theme.Gray
+import com.example.effectivemobiletestwork.ui.theme.LightGray
 import com.example.effectivemobiletestwork.ui.theme.Orange
 import com.example.effectivemobiletestwork.ui.theme.Pink
 import com.example.effectivemobiletestwork.ui.theme.SoftGray
+import com.google.accompanist.pager.ExperimentalPagerApi
 
-@Preview
+@ExperimentalPagerApi
 @Composable
-fun ProductCard() {
+fun ProductCard(
+    navController: NavController
+) {
     val sfprodisplay_regular = FontFamily(
         Font(R.font.sfprodisplay_regular, FontWeight.Normal),
     )
     val sfprodisplay_bold = FontFamily(
         Font(R.font.sfprodisplay_bold, FontWeight.Normal),
     )
-    val clickHeart by remember { mutableStateOf(false) }
-
     val pagerImageList = listOf(
         R.drawable.photo_icon,
         R.drawable.photo_icon,
         R.drawable.photo_image_3,
     )
 
+
     Column(
         modifier = Modifier
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .border(width = 1.dp, color = Gray, RoundedCornerShape(8.dp))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                navController.navigate(NavigationRoute.ProductPageScreen.route)
+            }
     ) {
         HorizontalPagerImages(pagerImageList = pagerImageList)
         Information(sfprodisplay_regular, sfprodisplay_bold)
@@ -76,12 +95,53 @@ fun ProductCard() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@ExperimentalPagerApi
 @Composable
 fun HorizontalPagerImages(
     pagerImageList: List<Int>
 ) {
 
+    val pagerState = rememberPagerState()
+
+    val clickHeart by remember { mutableStateOf(false) }
+
+    Box() {
+        HorizontalPager(
+            modifier = Modifier.width(168.dp),
+            state = pagerState,
+            count = pagerImageList.size,
+        ) { page ->
+            Image(
+                painter = painterResource(id = pagerImageList[page]),
+                contentDescription = null
+            )
+        }
+        Icon(
+            modifier = Modifier
+                .padding(all = 9.dp)
+                .size(18.dp)
+                .align(Alignment.TopEnd),
+            painter = painterResource(id = if (clickHeart) R.drawable.selected_heart else R.drawable.heart_icon),
+            contentDescription = null,
+            tint = Pink
+        )
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 2.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            repeat(pagerImageList.size) { iteration ->
+                val color = if (pagerState.currentPage == iteration) Pink else LightGray
+                Box(
+                    modifier = Modifier
+                        .padding(2.dp)
+                        .background(color = color, CircleShape)
+                        .size(4.dp)
+                )
+            }
+        }
+    }
 }
 
 

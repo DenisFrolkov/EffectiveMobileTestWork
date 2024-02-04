@@ -10,17 +10,16 @@ import com.example.effectivemobiletestwork.screens.CatalogScreen
 import com.example.effectivemobiletestwork.screens.FavoriteScreen
 import com.example.effectivemobiletestwork.screens.ProductPageScreen
 import com.example.effectivemobiletestwork.screens.RegistrationScreen
+import com.google.accompanist.pager.ExperimentalPagerApi
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 
 fun Navigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = NavigationRoute.BottomNavigation.route) {
+    NavHost(navController = navController, startDestination = NavigationRoute.RegistrationScreen.route) {
         composable(NavigationRoute.RegistrationScreen.route){
             RegistrationScreen(navController = navController)
-        }
-        composable(NavigationRoute.CatalogScreen.route){
-            CatalogScreen()
         }
         composable(NavigationRoute.BottomNavigation.route){
             BottomNavigation(navController = navController)

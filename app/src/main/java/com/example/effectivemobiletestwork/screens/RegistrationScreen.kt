@@ -11,6 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,18 +34,22 @@ import com.example.effectivemobiletestwork.R
 import com.example.effectivemobiletestwork.common.EnterButton
 import com.example.effectivemobiletestwork.common.TextInput
 import com.example.effectivemobiletestwork.navigation.NavigationRoute
+import com.example.effectivemobiletestwork.ui.theme.LightPink
 import com.example.effectivemobiletestwork.ui.theme.Pink
 
 @Composable
 fun RegistrationScreen(
     navController: NavController
 ) {
-    val sfprodisplay_medium = FontFamily(
-        Font(R.font.sfprodisplay_medium, FontWeight.Normal),
-    )
+
     val sfprodisplay_regular = FontFamily(
         Font(R.font.sfprodisplay_regular, FontWeight.Normal),
     )
+
+    var name by remember { mutableStateOf("") }
+    var surname by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,12 +73,38 @@ fun RegistrationScreen(
                 textAlign = TextAlign.Center
             )
         }
-        TextInput(inputText = "Имя")
-        Spacer(modifier = Modifier.height(16.dp))
-        TextInput(inputText = "Фамилия")
-        Spacer(modifier = Modifier.height(16.dp))
-        TextInput(inputText = "Номер телефона")
-        EnterButton(navController = navController, navigationRoute = NavigationRoute.BottomNavigation.route, "Войти", colorButton = Pink)
+        Column(
+            modifier = Modifier.padding(top = 139.dp)
+        ) {
+            TextInput(
+                inputText = "Имя",
+                onTextChanged = { newName -> name = newName },
+                validation = { text -> text.matches(Regex("^[А-Яа-я]*\$")) }
+            )
+
+            TextInput(
+                inputText = "Фамилия",
+                onTextChanged = { newSurname -> surname = newSurname }, // Исправлено
+                validation = { text -> text.matches(Regex("^[А-Яа-я]*\$")) }
+            )
+
+            TextInput(
+                inputText = "Номер телефона",
+                onTextChanged = { newPhoneNumber -> phoneNumber = newPhoneNumber },
+                validation = { text -> text.matches(Regex("^(\\+7 |7 )?\\d{3} \\d{3}-\\d{2}-\\d{2}\$")) }
+            )
+        }
+        Box(
+            modifier = Modifier.padding(top = 32.dp)
+        ) {
+            EnterButton(
+                navController = navController,
+                navigationRoute = if (name.isNotEmpty() && surname.isNotEmpty() && phoneNumber.isNotEmpty()) NavigationRoute.BottomNavigation.route else "",
+                "Войти",
+                colorButton = if (name.isNotEmpty() && surname.isNotEmpty() && phoneNumber.isNotEmpty()) Pink else LightPink,
+                colorText = Color.White
+            )
+        }
         Box(
             modifier = Modifier
                 .fillMaxHeight()

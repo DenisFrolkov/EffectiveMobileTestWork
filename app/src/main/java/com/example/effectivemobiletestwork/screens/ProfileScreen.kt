@@ -90,7 +90,8 @@ fun ProfileScreen(
                 navController = navController,
                 navigationRoute = NavigationRoute.RegistrationScreen.route,
                 "Выйти",
-                colorButton = Gray
+                colorButton = Gray,
+                colorText = Color.Black
             )
         }
     }

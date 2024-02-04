@@ -32,14 +32,18 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.effectivemobiletestwork.R
 import com.example.effectivemobiletestwork.common.FilterButton
 import com.example.effectivemobiletestwork.common.ProductCard
 import com.example.effectivemobiletestwork.ui.theme.SoftGray
+import com.google.accompanist.pager.ExperimentalPagerApi
 
-@Preview
+@ExperimentalPagerApi
 @Composable
-fun CatalogScreen() {
+fun CatalogScreen(
+    navController: NavController
+) {
 
     val sfprodisplay_medium = FontFamily(
         Font(R.font.sfprodisplay_medium, FontWeight.Normal),
@@ -153,29 +157,27 @@ fun CatalogScreen() {
                         .fillMaxHeight()
                         .padding(horizontal = 16.dp),
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        ProductCard()
-                        ProductCard()
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        ProductCard()
-                        ProductCard()
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        ProductCard()
-                        ProductCard()
+                    repeat(3) {
+                        RepeatProductCardRow(count = 2, navController = navController)
                     }
                 }
             }
+        }
+    }
+}
+
+@ExperimentalPagerApi
+@Composable
+fun RepeatProductCardRow(
+    count: Int,
+    navController: NavController
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        repeat(count) {
+            ProductCard(navController = navController)
         }
     }
 }

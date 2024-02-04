@@ -40,7 +40,9 @@ import com.example.effectivemobiletestwork.screens.StocksScreen
 import com.example.effectivemobiletestwork.ui.theme.Dark
 import com.example.effectivemobiletestwork.ui.theme.DarkWhite
 import com.example.effectivemobiletestwork.ui.theme.Pink
+import com.google.accompanist.pager.ExperimentalPagerApi
 
+@OptIn(ExperimentalPagerApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BottomNavigation(
@@ -128,7 +130,7 @@ fun BottomNavigation(
                 MainScreen()
             }
             composable(BottomNavigationRoute.CatalogScreen.route) {
-                CatalogScreen()
+                CatalogScreen(navController = navController)
             }
             composable(BottomNavigationRoute.CartScreen.route) {
                 CartsScreen()
