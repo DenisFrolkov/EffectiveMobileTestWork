@@ -1,6 +1,5 @@
 package com.example.effectivemobiletestwork.common
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -10,14 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.shape.CircleShape
 import com.google.accompanist.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,12 +25,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.rememberPagerState
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -45,10 +36,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.effectivemobiletestwork.DataClass.Item
+import com.example.effectivemobiletestwork.DataClass.getImagesForItem
+import com.example.effectivemobiletestwork.DataClass.itemImageMap
 import com.example.effectivemobiletestwork.R
 import com.example.effectivemobiletestwork.navigation.NavigationRoute
 import com.example.effectivemobiletestwork.ui.theme.Dark
@@ -62,7 +55,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 @ExperimentalPagerApi
 @Composable
 fun ProductCard(
-    navController: NavController
+    navController: NavController,
+    item: Item
 ) {
     val sfprodisplay_regular = FontFamily(
         Font(R.font.sfprodisplay_regular, FontWeight.Normal),
@@ -70,33 +64,42 @@ fun ProductCard(
     val sfprodisplay_bold = FontFamily(
         Font(R.font.sfprodisplay_bold, FontWeight.Normal),
     )
-    val pagerImageList = listOf(
-        R.drawable.photo_icon,
-        R.drawable.photo_icon,
-        R.drawable.photo_image_3,
-    )
 
     var isHeartSelected by remember { mutableStateOf(false) }
+
+    val imagesForItem = getImagesForItem(item)
 
     Column(
         modifier = Modifier
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .border(width = 1.dp, color = Gray, RoundedCornerShape(8.dp))
     ) {
-        HorizontalPagerImages(navController = navController, pagerImageList = pagerImageList, isHeartSelected = isHeartSelected)
-        Information(navController = navController, sfprodisplay_regular, sfprodisplay_bold)
+        HorizontalPagerImages(
+            navController = navController,
+            isHeartSelected = isHeartSelected,
+            item = item,
+            imagesForItem = imagesForItem
+        )
+        Information(
+            navController = navController,
+            sfprodisplay_regular,
+            sfprodisplay_bold,
+            item = item
+        )
         Box(modifier = Modifier.align(Alignment.End)) {
             AddProductButton()
         }
     }
 }
 
+
 @ExperimentalPagerApi
 @Composable
 fun HorizontalPagerImages(
     navController: NavController,
-    pagerImageList: List<Int>,
-    isHeartSelected: Boolean
+    isHeartSelected: Boolean,
+    item: Item,
+    imagesForItem: List<Int>
 ) {
     val pagerState = rememberPagerState()
 
@@ -104,18 +107,20 @@ fun HorizontalPagerImages(
     Box() {
         HorizontalPager(
             state = pagerState,
-            count = pagerImageList.size,
+            count = imagesForItem.size,
             modifier = Modifier
                 .width(168.dp)
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     indication = null
                 ) {
-                    navController.navigate(NavigationRoute.ProductPageScreen.route)
+                    navController.navigate("${NavigationRoute.ProductPageScreen.route}/${item.id}")
+
                 }
+
         ) { page ->
             Image(
-                painter = painterResource(id = pagerImageList[page]),
+                painter = painterResource(id = imagesForItem[page]),
                 contentDescription = null
             )
         }
@@ -146,7 +151,7 @@ fun HorizontalPagerImages(
                     navController.navigate(NavigationRoute.ProductPageScreen.route)
                 },
         ) {
-            repeat(pagerImageList.size) { iteration ->
+            repeat(imagesForItem.size) { iteration ->
                 val color = if (pagerState.currentPage == iteration) Pink else LightGray
                 Box(
                     modifier = Modifier
@@ -163,7 +168,8 @@ fun HorizontalPagerImages(
 fun Information(
     navController: NavController,
     sfprodisplay_regular: FontFamily,
-    sfprodisplay_bold: FontFamily
+    sfprodisplay_bold: FontFamily,
+    item: Item
 ) {
     Column(
         modifier = Modifier
@@ -172,13 +178,13 @@ fun Information(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                navController.navigate(NavigationRoute.ProductPageScreen.route)
-            },
+                navController.navigate("${NavigationRoute.ProductPageScreen.route}/${item.id}")
+            }
     ) {
         Text(
             text = buildAnnotatedString {
                 withStyle(style = SpanStyle(textDecoration = TextDecoration.LineThrough)) {
-                    append("000 ₽")
+                    append(item.price.price)
                 }
             },
             style = TextStyle(
@@ -191,7 +197,7 @@ fun Information(
             modifier = Modifier.padding(top = 2.dp)
         ) {
             Text(
-                text = "000 ₽",
+                text = item.price.priceWithDiscount,
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = Color.Black,
@@ -204,7 +210,7 @@ fun Information(
                     .background(color = Pink, shape = RoundedCornerShape(size = 4.dp))
             ) {
                 Text(
-                    text = "-00%",
+                    text = "-${item.price.discount}%",
                     style = TextStyle(
                         fontSize = 9.sp,
                         color = Color.White,
@@ -216,7 +222,7 @@ fun Information(
             }
         }
         Text(
-            text = "Title",
+            text = item.title,
             style = TextStyle(
                 fontSize = 12.sp,
                 color = Color.Black,
@@ -225,13 +231,16 @@ fun Information(
             modifier = Modifier.padding(top = 2.dp)
         )
         Text(
-            text = "text",
+            text = item.subtitle,
             style = TextStyle(
                 fontSize = 10.sp,
                 color = Dark,
                 fontFamily = sfprodisplay_regular
             ),
-            modifier = Modifier.padding(top = 2.dp)
+            modifier = Modifier
+                .padding(top = 2.dp)
+                .width(154.dp)
+                .height(37.dp)
         )
         Row(
             verticalAlignment = Alignment.Bottom,
@@ -245,7 +254,7 @@ fun Information(
                     .align(Alignment.CenterVertically)
             )
             Text(
-                text = "0.0",
+                text = item.feedback.rating.toString(),
                 style = TextStyle(
                     fontSize = 9.sp,
                     color = Orange,
@@ -256,7 +265,7 @@ fun Information(
                     .align(Alignment.CenterVertically)
             )
             Text(
-                text = "(0)",
+                text = "(" + item.feedback.count.toString() + ")",
                 style = TextStyle(
                     fontSize = 9.sp,
                     color = SoftGray,

@@ -8,14 +8,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.MaterialTheme
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.effectivemobiletestwork.DataClass.Item
 import com.example.effectivemobiletestwork.R
 import com.example.effectivemobiletestwork.common.FilterButton
 import com.example.effectivemobiletestwork.common.ProductCard
@@ -45,7 +47,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 
 @ExperimentalPagerApi
 @Composable
-fun CatalogScreen(navController: NavController) {
+fun CatalogScreen(
+    navController: NavController,
+    itemList: List<Item>
+) {
 
     val sfprodisplay_regular = FontFamily(Font(R.font.sfprodisplay_regular, FontWeight.Normal))
 
@@ -219,34 +224,20 @@ fun CatalogScreen(navController: NavController) {
                 }
             }
         }
-        LazyColumn() {
-            item {
-                Column(
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+        ) {
+            items(items = itemList) { it ->
+                Box(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(horizontal = 16.dp),
+                        .padding(3.5.dp),
+                    contentAlignment = Alignment.Center
                 ) {
-                    repeat(3) {
-                        RepeatProductCardRow(count = 2, navController = navController)
-                    }
+                    ProductCard(navController = navController, item = it)
                 }
             }
-        }
-    }
-}
-
-@ExperimentalPagerApi
-@Composable
-fun RepeatProductCardRow(
-    count: Int,
-    navController: NavController
-) {
-    Row(
-        horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        repeat(count) {
-            ProductCard(navController = navController)
         }
     }
 }
