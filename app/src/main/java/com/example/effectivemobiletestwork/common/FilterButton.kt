@@ -31,10 +31,10 @@ import com.example.effectivemobiletestwork.ui.theme.SoftGray
 
 @Composable
 fun FilterButton(
-    textButton: String
+    textButton: String,
+    isSelected: Boolean,
+    onFilterSelected: (String) -> Unit
 ) {
-    var clickButton by remember { mutableStateOf(false) }
-
     val sfProDisplayRegular = FontFamily(
         Font(R.font.sfprodisplay_regular, FontWeight.Normal),
     )
@@ -43,19 +43,19 @@ fun FilterButton(
         modifier = Modifier
             .padding(end = 6.dp)
             .background(
-                color = if (clickButton) DarkGray else Gray,
+                color = if (isSelected) DarkGray else Gray,
                 shape = RoundedCornerShape(size = 100.dp)
             )
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                clickButton = !clickButton
+                onFilterSelected(textButton)
             }
     ) {
         ButtonContent(
             textButton = textButton,
-            clickButton = clickButton,
+            isSelected = isSelected,
             sfProDisplayRegular = sfProDisplayRegular
         )
     }
@@ -64,7 +64,7 @@ fun FilterButton(
 @Composable
 private fun ButtonContent(
     textButton: String,
-    clickButton: Boolean,
+    isSelected: Boolean,
     sfProDisplayRegular: FontFamily
 ) {
     Row(
@@ -81,12 +81,12 @@ private fun ButtonContent(
             text = textButton,
             style = TextStyle(
                 fontSize = 14.sp,
-                color = if (clickButton) Color.White else SoftGray,
+                color = if (isSelected) Color.White else SoftGray,
                 fontFamily = sfProDisplayRegular
             )
         )
 
-        if (clickButton) {
+        if (isSelected) {
             Icon(
                 painter = painterResource(id = R.drawable.undo_icon),
                 contentDescription = null,

@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -75,20 +76,15 @@ fun ProductCard(
         R.drawable.photo_image_3,
     )
 
+    var isHeartSelected by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .border(width = 1.dp, color = Gray, RoundedCornerShape(8.dp))
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                navController.navigate(NavigationRoute.ProductPageScreen.route)
-            }
     ) {
-        HorizontalPagerImages(pagerImageList = pagerImageList)
-        Information(sfprodisplay_regular, sfprodisplay_bold)
+        HorizontalPagerImages(navController = navController, pagerImageList = pagerImageList, isHeartSelected = isHeartSelected)
+        Information(navController = navController, sfprodisplay_regular, sfprodisplay_bold)
         Box(modifier = Modifier.align(Alignment.End)) {
             AddProductButton()
         }
@@ -98,18 +94,25 @@ fun ProductCard(
 @ExperimentalPagerApi
 @Composable
 fun HorizontalPagerImages(
-    pagerImageList: List<Int>
+    navController: NavController,
+    pagerImageList: List<Int>,
+    isHeartSelected: Boolean
 ) {
-
     val pagerState = rememberPagerState()
 
-    val clickHeart by remember { mutableStateOf(false) }
 
     Box() {
         HorizontalPager(
-            modifier = Modifier.width(168.dp),
             state = pagerState,
             count = pagerImageList.size,
+            modifier = Modifier
+                .width(168.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    navController.navigate(NavigationRoute.ProductPageScreen.route)
+                }
         ) { page ->
             Image(
                 painter = painterResource(id = pagerImageList[page]),
@@ -117,19 +120,31 @@ fun HorizontalPagerImages(
             )
         }
         Icon(
+            painter = painterResource(id = if (isHeartSelected) R.drawable.selected_heart else R.drawable.heart_icon),
+            contentDescription = null,
+            tint = Pink,
             modifier = Modifier
                 .padding(all = 9.dp)
                 .size(18.dp)
-                .align(Alignment.TopEnd),
-            painter = painterResource(id = if (clickHeart) R.drawable.selected_heart else R.drawable.heart_icon),
-            contentDescription = null,
-            tint = Pink
+                .align(Alignment.TopEnd)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    !isHeartSelected
+                },
         )
         Row(
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 2.dp),
-            horizontalArrangement = Arrangement.Center
+                .padding(bottom = 2.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    navController.navigate(NavigationRoute.ProductPageScreen.route)
+                },
         ) {
             repeat(pagerImageList.size) { iteration ->
                 val color = if (pagerState.currentPage == iteration) Pink else LightGray
@@ -144,15 +159,21 @@ fun HorizontalPagerImages(
     }
 }
 
-
 @Composable
 fun Information(
+    navController: NavController,
     sfprodisplay_regular: FontFamily,
     sfprodisplay_bold: FontFamily
 ) {
     Column(
         modifier = Modifier
             .padding(start = 6.dp)
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) {
+                navController.navigate(NavigationRoute.ProductPageScreen.route)
+            },
     ) {
         Text(
             text = buildAnnotatedString {
@@ -183,67 +204,67 @@ fun Information(
                     .background(color = Pink, shape = RoundedCornerShape(size = 4.dp))
             ) {
                 Text(
-                    modifier = Modifier
-                        .padding(horizontal = 6.dp, vertical = 3.dp),
                     text = "-00%",
                     style = TextStyle(
                         fontSize = 9.sp,
                         color = Color.White,
                         fontFamily = sfprodisplay_bold
-                    )
+                    ),
+                    modifier = Modifier
+                        .padding(horizontal = 6.dp, vertical = 3.dp)
                 )
             }
         }
         Text(
-            modifier = Modifier.padding(top = 2.dp),
             text = "Title",
             style = TextStyle(
                 fontSize = 12.sp,
                 color = Color.Black,
                 fontFamily = sfprodisplay_bold
-            )
+            ),
+            modifier = Modifier.padding(top = 2.dp)
         )
         Text(
-            modifier = Modifier.padding(top = 2.dp),
             text = "text",
             style = TextStyle(
                 fontSize = 10.sp,
                 color = Dark,
                 fontFamily = sfprodisplay_regular
-            )
+            ),
+            modifier = Modifier.padding(top = 2.dp)
         )
         Row(
-            modifier = Modifier.padding(top = 4.dp),
-            verticalAlignment = Alignment.Bottom
+            verticalAlignment = Alignment.Bottom,
+            modifier = Modifier.padding(top = 4.dp)
         ) {
             Image(
+                painter = painterResource(id = R.drawable.star_icon),
+                contentDescription = null,
                 modifier = Modifier
                     .size(size = 13.dp)
-                    .align(Alignment.CenterVertically),
-                painter = painterResource(id = R.drawable.star_icon),
-                contentDescription = null
+                    .align(Alignment.CenterVertically)
             )
             Text(
-                modifier = Modifier
-                    .padding(start = 2.dp, top = 3.dp, bottom = 3.dp)
-                    .align(Alignment.CenterVertically),
                 text = "0.0",
                 style = TextStyle(
                     fontSize = 9.sp,
                     color = Orange,
                     fontFamily = sfprodisplay_regular
-                )
+                ),
+                modifier = Modifier
+                    .padding(start = 2.dp, top = 3.dp, bottom = 3.dp)
+                    .align(Alignment.CenterVertically)
             )
             Text(
-                modifier = Modifier
-                    .padding(start = 2.dp)
-                    .align(Alignment.CenterVertically),
                 text = "(0)",
                 style = TextStyle(
                     fontSize = 9.sp,
                     color = SoftGray,
                     fontFamily = sfprodisplay_regular
-                )
+                ),
+                modifier = Modifier
+                    .padding(start = 2.dp)
+                    .align(Alignment.CenterVertically)
             )
         }
     }
@@ -252,6 +273,7 @@ fun Information(
 @Composable
 fun AddProductButton() {
     Box(
+        contentAlignment = Alignment.BottomEnd,
         modifier = Modifier
             .background(
                 color = Pink,
@@ -261,13 +283,11 @@ fun AddProductButton() {
                     topEnd = 0.dp,
                     bottomEnd = 8.dp
                 )
-            ),
-        contentAlignment = Alignment.BottomEnd
+            )
     ) {
         Box(
             modifier = Modifier.padding(all = 8.dp)
-        )
-        {
+        ) {
             Icon(
                 modifier = Modifier
                     .size(size = 24.dp),
@@ -278,4 +298,3 @@ fun AddProductButton() {
         }
     }
 }
-

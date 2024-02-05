@@ -32,24 +32,22 @@ fun EnterButton(
             .fillMaxWidth()
             .background(color = colorButton, shape = RoundedCornerShape(8.dp))
             .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                if (navigationRoute != ""){
-                    navController.navigate(navigationRoute)
+                onClick = {
+                    if (navigationRoute.isNotEmpty()) {
+                        navController.navigate(navigationRoute)
+                    }
                 }
-            }
+            )
+            .padding(vertical = 15.dp)
     ) {
         Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 18.dp, bottom = 15.dp),
             text = textButton,
             style = TextStyle(
                 fontSize = 14.sp,
                 color = colorText
             ),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

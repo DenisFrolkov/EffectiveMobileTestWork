@@ -14,10 +14,9 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-
 fun Navigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = NavigationRoute.RegistrationScreen.route) {
+    NavHost(navController = navController, startDestination = NavigationRoute.ProductPageScreen.route) {
         composable(NavigationRoute.RegistrationScreen.route){
             RegistrationScreen(navController = navController)
         }
@@ -25,7 +24,7 @@ fun Navigation() {
             BottomNavigation(navController = navController)
         }
         composable(NavigationRoute.ProductPageScreen.route){
-            ProductPageScreen()
+            ProductPageScreen(navController = navController)
         }
     }
 }

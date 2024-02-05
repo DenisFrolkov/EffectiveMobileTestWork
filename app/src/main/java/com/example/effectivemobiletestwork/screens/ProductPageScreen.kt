@@ -44,6 +44,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.effectivemobiletestwork.R
 import com.example.effectivemobiletestwork.ui.theme.Dark
 import com.example.effectivemobiletestwork.ui.theme.Gray
@@ -55,9 +56,10 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 
 @ExperimentalPagerApi
-@Preview
 @Composable
-fun ProductPageScreen() {
+fun ProductPageScreen(
+    navController: NavController
+) {
     val sfprodisplay_medium = FontFamily(
         Font(R.font.sfprodisplay_medium, FontWeight.Normal),
     )
@@ -113,36 +115,42 @@ fun ProductPageScreen() {
     ) {
         item {
             Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(color = Color.White)
-                    .height(height = 46.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .height(height = 46.dp)
             ) {
                 Icon(
+                    painter = painterResource(id = R.drawable.back_icon),
+                    contentDescription = null,
                     modifier = Modifier
                         .padding()
                         .align(Alignment.Top)
-                        .padding(start = 21.dp, top = 14.dp, end = 14.dp, bottom = 8.dp),
-                    painter = painterResource(id = R.drawable.back_icon),
-                    contentDescription = null
+                        .padding(start = 21.dp, top = 14.dp, end = 14.dp, bottom = 8.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null
+                        ) {
+                            navController.popBackStack()
+                        }
                 )
                 Icon(
+                    painter = painterResource(id = R.drawable.share_icon),
+                    contentDescription = null,
                     modifier = Modifier
                         .padding()
                         .align(Alignment.Top)
-                        .padding(top = 14.dp, end = 14.dp, bottom = 8.dp),
-                    painter = painterResource(id = R.drawable.share_icon),
-                    contentDescription = null
+                        .padding(top = 14.dp, end = 14.dp, bottom = 8.dp)
                 )
             }
             Box(
                 modifier = Modifier.padding(start = 21.dp, top = 16.dp, end = 14.dp)
             ) {
                 HorizontalPager(
-                    modifier = Modifier.height(400.dp),
                     state = pagerState,
                     count = pagerImageList.size,
+                    modifier = Modifier.height(400.dp)
                 ) { page ->
                     Image(
                         modifier = Modifier.fillMaxSize(),
@@ -151,6 +159,9 @@ fun ProductPageScreen() {
                     )
                 }
                 Icon(
+                    painter = painterResource(id = if (clickHeart) R.drawable.heart_icon else R.drawable.selected_heart),
+                    contentDescription = null,
+                    tint = Pink,
                     modifier = Modifier
                         .size(18.dp)
                         .align(Alignment.TopEnd)
@@ -159,29 +170,26 @@ fun ProductPageScreen() {
                             indication = null
                         ) {
                             clickHeart = !clickHeart
-                        },
-                    painter = painterResource(id = if (clickHeart) R.drawable.heart_icon else R.drawable.selected_heart),
-                    contentDescription = null,
-                    tint = Pink
+                        }
                 )
                 Image(
+                    painter = painterResource(id = R.drawable.question_icon),
+                    contentDescription = null,
                     modifier = Modifier
                         .padding(bottom = 16.dp)
                         .size(18.dp)
-                        .align(Alignment.BottomStart),
-                    painter = painterResource(id = R.drawable.question_icon),
-                    contentDescription = null,
+                        .align(Alignment.BottomStart)
                 )
             }
             Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Row(
+                    horizontalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier
                         .padding(top = 16.dp)
-                        .size(width = 52.dp, height = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
+                        .size(width = 52.dp, height = 10.dp)
                 ) {
                     repeat(pagerImageList.size) { iteration ->
                         val color = if (pagerState.currentPage == iteration) Pink else LightGray
@@ -196,79 +204,79 @@ fun ProductPageScreen() {
                 }
             }
             Text(
-                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 text = "A`PIEU",
                 style = TextStyle(
                     fontSize = 16.sp,
                     color = SoftGray,
                     fontFamily = sfprodisplay_medium
-                )
+                ),
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
             )
             Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 16.dp, top = 8.dp, end = 14.dp, bottom = 10.dp),
                 text = "Пенка для умывания`A`PIEU` `DEEP CLEAN` 200 мл",
                 style = TextStyle(
                     fontSize = 20.sp,
                     color = Color.Black,
                     fontFamily = sfprodisplay_medium,
                     textAlign = TextAlign.Justify
-                )
-            )
-            Text(
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 16.dp),
+                    .padding(start = 16.dp, top = 8.dp, end = 14.dp, bottom = 10.dp)
+            )
+            Text(
                 text = quantityText,
                 style = TextStyle(
                     fontSize = 12.sp,
                     color = SoftGray,
                     fontFamily = sfprodisplay_regular
-                )
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 16.dp)
             )
             Divider(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp),
                 color = Gray,
                 thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
             )
             Row(
-                modifier = Modifier.padding(start = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(start = 16.dp)
             ) {
                 Image(
-                    modifier = Modifier.size(height = 20.dp, width = 16.dp),
                     painter = painterResource(id = R.drawable.star_one_icon),
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(height = 20.dp, width = 16.dp)
                 )
                 Image(
-                    modifier = Modifier.size(height = 20.dp, width = 16.dp),
                     painter = painterResource(id = R.drawable.star_one_icon),
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(height = 20.dp, width = 16.dp)
                 )
                 Image(
-                    modifier = Modifier.size(height = 20.dp, width = 16.dp),
                     painter = painterResource(id = R.drawable.star_one_icon),
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(height = 20.dp, width = 16.dp)
                 )
                 Image(
-                    modifier = Modifier.size(height = 20.dp, width = 16.dp),
                     painter = painterResource(id = R.drawable.star_one_icon),
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(height = 20.dp, width = 16.dp),
                 )
                 Image(
-                    modifier = Modifier.size(height = 20.dp, width = 16.dp),
                     painter = painterResource(id = R.drawable.star_two_icon),
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier.size(height = 20.dp, width = 16.dp),
                 )
                 Text(
-                    modifier = Modifier.padding(start = 8.dp),
                     text = "4.3",
                     style = TextStyle(
                         fontSize = 12.sp,
                         color = SoftGray,
                         fontFamily = sfprodisplay_regular
-                    )
+                    ),
+                    modifier = Modifier.padding(start = 8.dp)
                 )
                 Box(
                     modifier = Modifier
@@ -277,18 +285,18 @@ fun ProductPageScreen() {
                         .background(Color.Gray, CircleShape)
                 )
                 Text(
-                    modifier = Modifier.padding(start = 8.dp),
                     text = "4 отзыва ",
                     style = TextStyle(
                         fontSize = 12.sp,
                         color = SoftGray,
                         fontFamily = sfprodisplay_regular
-                    )
+                    ),
+                    modifier = Modifier.padding(start = 8.dp)
                 )
             }
             Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(start = 21.dp, top = 16.dp),
-                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "549 ₽",
@@ -316,84 +324,84 @@ fun ProductPageScreen() {
                         .background(color = Pink, shape = RoundedCornerShape(size = 4.dp))
                 ) {
                     Text(
-                        modifier = Modifier
-                            .padding(horizontal = 6.dp, vertical = 3.dp),
                         text = "-39%",
                         style = TextStyle(
                             fontSize = 9.sp,
                             color = Color.White,
                             fontFamily = sfprodisplay_bold
-                        )
+                        ),
+                        modifier = Modifier
+                            .padding(horizontal = 6.dp, vertical = 3.dp)
                     )
                 }
             }
             Text(
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 24.dp, bottom = 16.dp),
                 text = "Описани",
                 style = TextStyle(
                     fontSize = 16.sp,
                     color = Color.Black,
                     fontFamily = sfprodisplay_medium
-                )
+                ),
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 24.dp, bottom = 16.dp)
             )
             Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .background(color = Gray, shape = RoundedCornerShape(8.dp)),
-                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = Modifier.padding(start = 8.dp, top = 15.dp, bottom = 15.dp),
                     text = "A`PIEU",
                     style = TextStyle(
                         fontSize = 14.sp,
                         color = Color.Black,
                         fontFamily = sfprodisplay_medium
-                    )
+                    ),
+                    modifier = Modifier.padding(start = 8.dp, top = 15.dp, bottom = 15.dp)
                 )
                 Box(
+                    contentAlignment = Alignment.CenterEnd,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(end = 12.dp),
-                    contentAlignment = Alignment.CenterEnd
                 ) {
                     Icon(
-                        modifier = Modifier.size(24.dp),
                         painter = painterResource(id = R.drawable.arrow_icon),
-                        contentDescription = null
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
                     )
                 }
             }
             Text(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
                 text = description,
                 style = TextStyle(
                     fontSize = 12.sp,
                     color = Dark,
                     fontFamily = sfprodisplay_regular,
                     textAlign = TextAlign.Start
-                )
+                ),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
             )
             Text(
-                modifier = Modifier.padding(start = 16.dp),
                 text = "Скрыть",
                 style = TextStyle(
                     fontSize = 12.sp,
                     color = SoftGray,
                     fontFamily = sfprodisplay_regular
-                )
+                ),
+                modifier = Modifier.padding(start = 16.dp)
             )
             Text(
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 34.dp, bottom = 16.dp),
                 text = "Характеристики",
                 style = TextStyle(
                     fontSize = 16.sp,
                     color = Color.Black,
                     fontFamily = sfprodisplay_medium
-                )
+                ),
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 34.dp, bottom = 16.dp),
             )
             Column(
                 modifier = Modifier
@@ -401,8 +409,8 @@ fun ProductPageScreen() {
                     .padding(horizontal = 16.dp)
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = "Артикул товара",
@@ -422,13 +430,13 @@ fun ProductPageScreen() {
                     )
                 }
                 Divider(
-                    modifier = Modifier.padding(top = 4.dp, bottom = 12.dp),
                     color = Gray,
                     thickness = 2.dp,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
                 )
                 Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
                         text = "Область использования ",
@@ -448,13 +456,13 @@ fun ProductPageScreen() {
                     )
                 }
                 Divider(
-                    modifier = Modifier.padding(top = 4.dp, bottom = 12.dp),
                     color = Gray,
                     thickness = 2.dp,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 12.dp)
                 )
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = "Страна производства ",
@@ -474,16 +482,16 @@ fun ProductPageScreen() {
                     )
                 }
                 Divider(
-                    modifier = Modifier.padding(top = 4.dp),
                     color = Gray,
                     thickness = 2.dp,
+                    modifier = Modifier.padding(top = 4.dp)
                 )
             }
             Row(
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .padding(top = 34.dp),
-                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = "Состав",
@@ -494,8 +502,8 @@ fun ProductPageScreen() {
                     )
                 )
                 Box(
-                    modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.CenterEnd
+                    contentAlignment = Alignment.CenterEnd,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(
                         modifier = Modifier.size(24.dp),
@@ -505,27 +513,27 @@ fun ProductPageScreen() {
                 }
             }
             ClickableText(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp, bottom = 10.dp),
                 text = ingredientsShort,
                 onClick = {
                     expanded = !expanded
-                }
+                },
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp, bottom = 10.dp)
             )
             if (ingredients.length > 20) {
                 Text(
                     text = if (expanded) "Скрыть" else "Подробнее",
-                    modifier = Modifier
-                        .padding(start = 16.dp)
-                        .clickable {
-                            expanded = !expanded
-                        },
                     style = TextStyle(
                         fontSize = 12.sp,
                         color = SoftGray,
                         fontFamily = sfprodisplay_regular
-                    )
+                    ),
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .clickable {
+                            expanded = !expanded
+                        }
                 )
             }
             Box(
@@ -553,7 +561,6 @@ fun ProductPageScreen() {
                         )
                     )
                     Text(
-                        modifier = Modifier.padding(horizontal = 11.dp),
                         text = buildAnnotatedString {
                             withStyle(style = SpanStyle(textDecoration = TextDecoration.LineThrough)) {
                                 append("899 ₽")
@@ -563,11 +570,12 @@ fun ProductPageScreen() {
                             fontSize = 10.sp,
                             color = SoftGray,
                             fontFamily = sfprodisplay_regular
-                        )
+                        ),
+                        modifier = Modifier.padding(horizontal = 11.dp)
                     )
                     Box(
+                        contentAlignment = Alignment.CenterEnd,
                         modifier = Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.CenterEnd
                     ) {
                         Text(
                             text = "Добавить корзину",

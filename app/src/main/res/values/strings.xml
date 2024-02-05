@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">EffectiveMobileTestWork</string>
+    <string name="header_login_screen">Войти</string>
+    <string name="header_main_screen">Главная</string>
+    <string name="header_catalog_screen">Каталог</string>
+    <string name="header_cart_screen">Карзина</string>
+    <string name="header_stock_screen">Карзина</string>
+    <string name="first_name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="terms_and_conditions">Нажимая кнопку “Войти”, Вы принимаете\n</string>
+    <string name="loyalty_program_terms">условия программы лояльности</string>
+    <string name="popularity_sorting">По популярности</string>
+    <string name="on_price_reduction_sorting">По уменьшению цены</string>
+    <string name="in_ascending_order_of_price_sorting">По возрастанию цены</string>
+    <string name="filtering">Фильтр</string>
+    <string name="see_all">Смотреть все</string>
+    <string name="face">Лицо</string>
+    <string name="body">Тело</string>
+    <string name="sunburn">Загар</string>
+    <string name="mask">Маски</string>
 </resources>

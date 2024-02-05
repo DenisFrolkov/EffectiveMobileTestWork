@@ -9,10 +9,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,10 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.effectivemobiletestwork.R
@@ -58,8 +55,6 @@ fun TextInput(
             onValueChange = {
                 text = it
                 isHintVisible = it.text.isEmpty()
-                isError = !validation(it.text)
-                onTextChanged(it.text)
             },
             textStyle = TextStyle(
                 fontSize = 16.sp,
@@ -69,8 +64,7 @@ fun TextInput(
             cursorBrush = SolidColor(Color.Gray),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(50.dp)
-                .padding(top = 15.dp)
+                .padding(top = 1.dp)
                 .align(Alignment.CenterStart)
         )
 
@@ -102,6 +96,11 @@ fun TextInput(
                     }
             )
         }
+    }
+
+    LaunchedEffect(text.text) {
+        isError = !validation(text.text)
+        onTextChanged(text.text)
     }
 }
 
